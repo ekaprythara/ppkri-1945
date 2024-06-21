@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\ParkingGuest;
+use App\Models\AgentGuest;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 
-class ParkingGuestExport implements FromCollection, ShouldAutoSize, WithMapping, WithHeadings, WithEvents, WithCustomStartCell
+class AgentGuestExport implements FromCollection, ShouldAutoSize, WithMapping, WithHeadings, WithEvents, WithCustomStartCell
 {
   use Exportable;
   /**
@@ -30,24 +30,25 @@ class ParkingGuestExport implements FromCollection, ShouldAutoSize, WithMapping,
 
   public function collection()
   {
-    return ParkingGuest::all()
+    return AgentGuest::with('driver.agent')
       ->where('date', '>=', $this->from)
       ->where('date', '<=', $this->to)
-      ->sortBy('date');
+      ->orderBy('date')
+      ->get();
   }
 
   protected $i = 1;
 
-  public function map($parkingGuest): array
+  public function map($agentGuest): array
   {
     return [
       $this->i++,
-      $parkingGuest->date,
-      $parkingGuest->vehicleTypes->name,
-      $parkingGuest->count,
-      $parkingGuest->fee,
-      $parkingGuest->isCustomFee,
-      $parkingGuest->description
+      $agentGuest->date,
+      $agentGuest->driver->agent->name,
+      $agentGuest->driver->name,
+      $agentGuest->count,
+      $agentGuest->price,
+      $agentGuest->description
     ];
   }
 
@@ -56,20 +57,22 @@ class ParkingGuestExport implements FromCollection, ShouldAutoSize, WithMapping,
     return [
       'No.',
       'Tanggal',
-      'Tipe Kendaraan',
+      'Agen',
+      'Supir',
       'Jumlah',
       'Harga',
-      'Harga Khusus',
       'Keterangan',
     ];
   }
 
   public function registerEvents(): array
   {
-    $inboundLogistic = ParkingGuest::all()
+    $agentGuests = AgentGuest::with('driver.agent')
       ->where('date', '>=', $this->from)
-      ->where('date', '<=', $this->to);
-    $temp_count = $inboundLogistic->count();
+      ->where('date', '<=', $this->to)
+      ->orderBy('date')
+      ->get();
+    $temp_count = $agentGuests->count();
     $count = $temp_count + 7;
     $cellRange = "A7:G" . $count;
 
@@ -96,7 +99,7 @@ class ParkingGuestExport implements FromCollection, ShouldAutoSize, WithMapping,
               'bold' => true,
             ]
           ])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $event->sheet->getDelegate()->mergeCells('A5:G5')->setCellValue('A5', 'LAPORAN PARKIR')
+        $event->sheet->getDelegate()->mergeCells('A5:G5')->setCellValue('A5', 'LAPORAN TAMU AGEN')
           ->getStyle('A5:G5')->applyFromArray([
             'font' => [
               'bold' => true,

@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ParkingGuest;
+use App\Models\Parking;
 use App\Models\VehicleType;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class ParkingGuestController extends Controller
+class ParkingController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $parkingGuests = ParkingGuest::all();
+        $parking = Parking::all();
         $vehicleTypes = VehicleType::all();
-        return inertia("Transaction/ParkingGuest", [
-            "parkingGuests" => $parkingGuests,
+        return inertia("Transaction/Parking", [
+            "parking" => $parking,
             'vehicleTypes' => $vehicleTypes,
         ]);
     }
@@ -35,7 +34,9 @@ class ParkingGuestController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->input("isCustomFee")) {
+        $isCustomFee = $request->input("isCustomFee");
+
+        if ($isCustomFee) {
             $data = $request->validate([
                 "date" => "required|date",
                 "vehicleType_id" => "required",
@@ -44,7 +45,7 @@ class ParkingGuestController extends Controller
                 "fee" => "required",
                 "description" => "nullable"
             ]);
-            ParkingGuest::create($data);
+            Parking::create($data);
             // dd($data);
         } else {
             $fee = VehicleType::where("id", $request->input("vehicleType_id"))->value("fee");
@@ -57,7 +58,7 @@ class ParkingGuestController extends Controller
                 "fee" => intVal($fee) * intVal($count),
                 "description" => $request->input("description")
             ];
-            ParkingGuest::create($data);
+            Parking::create($data);
             // dd($data);
         }
     }
@@ -65,7 +66,7 @@ class ParkingGuestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ParkingGuest $parkingGuest)
+    public function show(Parking $parking)
     {
         //
     }
@@ -73,7 +74,7 @@ class ParkingGuestController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ParkingGuest $parkingGuest)
+    public function edit(Parking $parking)
     {
         //
     }
@@ -81,7 +82,7 @@ class ParkingGuestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ParkingGuest $parkingGuest, $id)
+    public function update(Request $request, Parking $parking, $id)
     {
         if ($request->input("isCustomFee")) {
             $data = $request->validate([
@@ -92,7 +93,7 @@ class ParkingGuestController extends Controller
                 "fee" => "required",
                 "description" => "nullable"
             ]);
-            ParkingGuest::where("id", $id)->update($data);
+            Parking::where("id", $id)->update($data);
             // dd($data);
         } else {
             $fee = VehicleType::where("id", $request->input("vehicleType_id"))->value("fee");
@@ -105,7 +106,7 @@ class ParkingGuestController extends Controller
                 "fee" => intVal($fee) * intVal($count),
                 "description" => $request->input("description")
             ];
-            ParkingGuest::where("id", $id)->update($data);
+            Parking::where("id", $id)->update($data);
             // dd($data);
         }
     }
@@ -113,8 +114,8 @@ class ParkingGuestController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ParkingGuest $parkingGuest)
+    public function destroy(Parking $parking, $id)
     {
-        //
+        Parking::destroy($id);
     }
 }

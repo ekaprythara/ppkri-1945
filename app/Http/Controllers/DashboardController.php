@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
-use App\Models\Guest;
-use App\Models\ParkingGuest;
+use App\Models\AgentGuest;
+use App\Models\Parking;
+use App\Models\RegularGuest;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -14,26 +15,38 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $now = now()->toDateString();
-        $currentMonth = date("m");
+        $now = now()->toDateString("en-CA");
+
         $currentYear = date("Y");
         $lastYear = date("Y", strtotime("-1 year"));
 
-        $agents = Agent::all();
-        $totalGuestIncome = Guest::where("date", $now)->get()->sum('price');
-        $totalParkingIncome = ParkingGuest::where("date", $now)->get()->sum('fee');
-        $totalGuestInThisYear = Guest::whereRaw('YEAR(date) = ?', [$currentYear])->get();
-        $totalGuestInLastYear = Guest::whereRaw('YEAR(date) = ?', [$lastYear])->get();
-        $totalGuestInThisMonth = Guest::whereYear('date', $currentYear)
-            ->whereMonth('date', $currentMonth)
-            ->get();
+
+        // Total Guest Income Today
+        $totalRegularGuestIncome = RegularGuest::where("date", $now)->get()->sum('price');
+        $totalAgentGuestIncome = AgentGuest::where("date", $now)->get()->sum('price');
+        $totalGuestIncome = $totalRegularGuestIncome + $totalAgentGuestIncome;
+
+        // Total Parking Income Today
+        $totalParkingIncome = Parking::where("date", $now)->get()->sum('fee');
+
+        // Total Income
+        $totalIncome = $totalGuestIncome + $totalParkingIncome;
+
+        // Total Guest
+        $totalRegularGuestInThisYear = RegularGuest::whereYear("date", "=", $currentYear)->get();
+        $totalAgentGuestInThisYear = AgentGuest::whereYear("date", "=", $currentYear)->get();
+
+        $totalRegularGuestInLastYear = RegularGuest::whereYear("date", "=", $lastYear)->get();
+        $totalAgentGuestInLastYear = AgentGuest::whereYear("date", "=", $lastYear)->get();
+
         return Inertia::render("Dashboard", [
-            "totalParkingIncome" => $totalParkingIncome,
             "totalGuestIncome" => $totalGuestIncome,
-            "totalGuestInThisYear" => $totalGuestInThisYear,
-            "totalGuestInLastYear" => $totalGuestInLastYear,
-            "totalGuestInThisMonth" => $totalGuestInThisMonth,
-            "agents" => $agents
+            "totalParkingIncome" => $totalParkingIncome,
+            "totalIncome" => $totalIncome,
+            "totalRegularGuestInThisYear" => $totalRegularGuestInThisYear,
+            "totalRegularGuestInLastYear" => $totalRegularGuestInLastYear,
+            "totalAgentGuestInThisYear" => $totalAgentGuestInThisYear,
+            "totalAgentGuestInLastYear" => $totalAgentGuestInLastYear,
         ]);
     }
 }

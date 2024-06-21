@@ -3,15 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\Agent;
+use App\Models\AgentGuest;
 use App\Models\Driver;
 use App\Models\Facility;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\VehicleType;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Level;
-use App\Models\ParkingGuest;
+use App\Models\RegularGuest;
 use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
@@ -112,12 +112,31 @@ class DatabaseSeeder extends Seeder
             "name" => "Ruang Ganti",
         ]);
 
-        // ParkingGuest::create([
-        //     "date" => Carbon::now(),
-        //     "vehicleType_id" => "1",
-        //     "count" => "1",
-        //     "fee" => "2000",
-        //     "description" => "Parkir Imigrasi",
-        // ]);
+        RegularGuest::create([
+            "date" => Carbon::now(),
+            "name" => "James",
+            "count" => "1",
+            "price" => "40000",
+            "isCustomPrice" => false,
+            "description" => "Tamu Indo",
+        ]);
+        RegularGuest::create([
+            "date" => "2024-05-02",
+            "name" => "Bond",
+            "count" => "1",
+            "price" => "20000",
+            "isCustomPrice" => true,
+            "description" => "",
+        ]);
+
+        AgentGuest::create([
+            "date" => "2024-06-19",
+            "driver_id" => 2,
+            "count" => 1,
+            "ticket_id" => null,
+            "isCustomPrice" => true,
+            "price" => "200000",
+            "description" => null
+        ]);
     }
 }

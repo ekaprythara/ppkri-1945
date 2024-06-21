@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('parking_guests', function (Blueprint $table) {
+        Schema::create('regular_guests', function (Blueprint $table) {
             $table->id();
             $table->date("date");
-            $table->foreignId("vehicleType_id")->constrained("vehicle_types", "id");
-            $table->integer("count");
-            $table->boolean("isCustomFee")->default(false);
-            $table->string("fee");
-            $table->string("description")->nullable();
+            $table->string('name');
+            $table->string('count');
+            $table->string('price');
+            $table->boolean("isCustomPrice");
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('parking-guests');
+        Schema::dropIfExists('regular_guests');
     }
 };

@@ -37,13 +37,13 @@ export function DataTable({ columns, data }) {
                     <InputLabel htmlFor="search">Search:</InputLabel>
                     <TextInput
                         id="search"
-                        type="text"
+                        type="search"
                         value={filtering}
                         onChange={(e) => setFiltering(e.target.value)}
                         className="rounded-md"
                     />
                 </div>
-                <table className="w-full text-left text-gray-500 border border-gray-300">
+                <table className="w-full text-left text-gray-500 border border-gray-300 font-inter font-bold">
                     <thead className="text-base uppercase tracking-wider cursor-default text-gray-700 bg-gray-50 border-b-2 border-gray-300">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id}>
@@ -80,7 +80,7 @@ export function DataTable({ columns, data }) {
                             </tr>
                         ))}
                     </thead>
-                    <tbody className="text-base font-lato">
+                    <tbody className="text-base font-inter">
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <tr
@@ -89,7 +89,7 @@ export function DataTable({ columns, data }) {
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <td
-                                            className="px-6 py-4 font-medium text-gray-800 whitespace-nowrap border-r border-gray-300" // Adjust text alignment to left
+                                            className="px-6 py-4 font-normal text-gray-800 whitespace-nowrap border-r border-gray-300" // Adjust text alignment to left
                                             key={cell.id}
                                         >
                                             {flexRender(
@@ -103,7 +103,7 @@ export function DataTable({ columns, data }) {
                         ) : (
                             <tr>
                                 <td
-                                    className="px-6 py-4 text-center text-lg text-gray-600 whitespace-nowrap border-r border-gray-300" // Adjust text alignment to left
+                                    className="px-6 py-4 text-center text-base font-normal text-gray-500 whitespace-nowrap border-r border-gray-300" // Adjust text alignment to left
                                     colSpan={columns.length}
                                 >
                                     No results
@@ -113,38 +113,34 @@ export function DataTable({ columns, data }) {
                     </tbody>
                 </table>
             </div>
-            <div className="flex justify-between items-center">
-                <div>
-                    <span className="font-lato text-lg text-neutral-700">
-                        Showing{" "}
-                        {data.length &&
-                            table.getState().pagination.pageIndex + 1}{" "}
-                        to {table.getPageCount()} of {table.getRowCount()}{" "}
-                        entries
-                    </span>
-                </div>
+            <div className="flex justify-between items-center p-2">
+                <span className="font-inter text-base text-gray-700">
+                    Showing{" "}
+                    {data.length && table.getState().pagination.pageIndex + 1}{" "}
+                    to {table.getPageCount()} of {table.getRowCount()} entries
+                </span>
                 <div className="flex justify-end items-center mt-5">
                     <button
                         onClick={() => table.firstPage()}
-                        className="py-2 px-3 font-lato text-lg bg-white text-black border border-slate-300 hover:bg-blue-700 hover:text-white transition-color duration-300 rounded-l-md mb-2"
+                        className="py-2 px-3 font-inter text-base bg-white text-gray-700 border border-slate-300 hover:bg-blue-700 hover:text-white focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50 focus:outline-none focus:z-10 transition-color duration-100 rounded-l-md mb-2"
                     >
                         First
                     </button>
                     <button
                         onClick={() => table.previousPage()}
-                        className="py-2 px-3 font-lato text-lg bg-white text-black border border-slate-300 hover:bg-blue-700 hover:text-white transition-color duration-300 mb-2"
+                        className="py-2 px-3 font-inter text-base bg-white text-gray-700 border border-slate-300 hover:bg-blue-700 hover:text-white focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50 focus:outline-none focus:z-10 transition-color duration-100 mb-2"
                     >
                         Previous
                     </button>
                     <button
                         onClick={() => table.nextPage()}
-                        className="py-2 px-3 font-lato text-lg bg-white text-black border border-slate-300 hover:bg-blue-700 hover:text-white transition-color duration-300 mb-2"
+                        className="py-2 px-3 font-inter text-base bg-white text-gray-700 border border-slate-300 hover:bg-blue-700 hover:text-white focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50 focus:outline-none focus:z-10 transition-color duration-100 mb-2"
                     >
                         Next
                     </button>
                     <button
                         onClick={() => table.lastPage()}
-                        className="py-2 px-3 font-lato text-lg bg-white text-black border border-slate-300 hover:bg-blue-700 hover:text-white transition-color duration-300 rounded-r-md mb-2"
+                        className="py-2 px-3 font-inter text-base bg-white text-gray-700 border border-slate-300 hover:bg-blue-700 hover:text-white focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50 focus:outline-none focus:z-10 transition-color duration-100 rounded-r-md mb-2"
                     >
                         Last
                     </button>

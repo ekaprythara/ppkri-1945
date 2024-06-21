@@ -24,6 +24,7 @@ export default {
                 poppins: ["Poppins"],
                 lilitaOne: ["Lilita One"],
                 chivoMono: ["Chivo Mono"],
+                inter: ["Inter"],
             },
         },
     },

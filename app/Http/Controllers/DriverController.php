@@ -15,7 +15,7 @@ class DriverController extends Controller
      */
     public function index()
     {
-        $drivers = Driver::latest()->get();
+        $drivers = Driver::latest()->with('agent')->get();
         $agents = Agent::all();
         return inertia("DataMaster/Driver", [
             "drivers" => $drivers,

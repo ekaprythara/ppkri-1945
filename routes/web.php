@@ -1,18 +1,19 @@
 <?php
 
 use App\Http\Controllers\AgentController;
+use App\Http\Controllers\AgentGuestController;
+use App\Http\Controllers\AgentGuestReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\FacilityController;
-use App\Http\Controllers\GuestController;
-use App\Http\Controllers\ParkingGuestController;
-use App\Http\Controllers\ParkingGuestReportController;
+use App\Http\Controllers\ParkingController;
+use App\Http\Controllers\ParkingReportController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RegularGuestController;
+use App\Http\Controllers\RegularGuestReportController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleTypeController;
-use App\Models\Facility;
-use App\Models\Ticket;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -78,18 +79,33 @@ Route::middleware('auth')->group(function () {
     Route::patch("/master-data/facility/{id}", [FacilityController::class, "update"]);
 
     //! Transaction Routes
-    Route::get("/transaction/parking-guest", [ParkingGuestController::class, "index"]);
-    Route::post("/transaction/parking-guest", [ParkingGuestController::class, "store"]);
-    Route::patch("/transaction/parking-guest/{id}", [ParkingGuestController::class, "update"]);
+    Route::get("/transaksi/parkir", [ParkingController::class, "index"]);
+    Route::post("/transaksi/parkir", [ParkingController::class, "store"]);
+    Route::patch("/transaksi/parkir/{id}", [ParkingController::class, "update"]);
+    Route::delete("/transaksi/parkir/{id}/delete", [ParkingController::class, "destroy"]);
 
-    Route::get("/transaction/guest", [GuestController::class, "index"]);
-    Route::post("/transaction/guest", [GuestController::class, "store"]);
-    Route::patch("/transaction/guest/{id}", [GuestController::class, "update"]);
+    Route::get("/transaksi/tamu-reguler", [RegularGuestController::class, "index"]);
+    Route::post("/transaksi/tamu-reguler", [RegularGuestController::class, "store"]);
+    Route::patch("/transaksi/tamu-reguler/{id}", [RegularGuestController::class, "update"]);
+    Route::delete("/transaksi/tamu-reguler/{id}/delete", [RegularGuestController::class, "destroy"]);
+
+    Route::get("/transaksi/tamu-agen", [AgentGuestController::class, "index"]);
+    Route::post("/transaksi/tamu-agen", [AgentGuestController::class, "store"]);
+    Route::patch("/transaksi/tamu-agen/{id}", [AgentGuestController::class, "update"]);
+    Route::delete("/transaksi/tamu-agen/{id}/delete", [AgentGuestController::class, "destroy"]);
 
     // ! Report Routes
-    Route::get("/report/parking-guest", [ParkingGuestReportController::class, "index"]);
-    Route::get("/report/parking-guest/print", [ParkingGuestReportController::class, "print"]);
-    Route::get("/report/parking-guest/export", [ParkingGuestReportController::class, "export"]);
+    Route::get("/laporan/parkir", [ParkingReportController::class, "index"]);
+    Route::get("/laporan/parkir/cetak", [ParkingReportController::class, "print"]);
+    Route::get("/laporan/parkir/ekspor", [ParkingReportController::class, "export"]);
+
+    Route::get("/laporan/tamu-reguler", [RegularGuestReportController::class, "index"]);
+    Route::get("/laporan/tamu-reguler/cetak", [RegularGuestReportController::class, "print"]);
+    Route::get("/laporan/tamu-reguler/ekspor", [RegularGuestReportController::class, "export"]);
+
+    Route::get("/laporan/tamu-agen", [AgentGuestReportController::class, "index"]);
+    Route::get("/laporan/tamu-agen/cetak", [AgentGuestReportController::class, "print"]);
+    Route::get("/laporan/tamu-agen/ekspor", [AgentGuestReportController::class, "export"]);
 });
 
 require __DIR__ . '/auth.php';
